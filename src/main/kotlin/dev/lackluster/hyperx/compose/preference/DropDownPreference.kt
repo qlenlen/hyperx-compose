@@ -291,6 +291,7 @@ fun DropDownPreference(
 }
 
 data class DropDownEntry(
+    val value: String? = null,
     val title: String? = null,
     val summary: String? = null,
     val iconRes: Int? = null,
