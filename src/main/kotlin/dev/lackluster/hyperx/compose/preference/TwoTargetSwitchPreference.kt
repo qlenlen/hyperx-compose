@@ -35,7 +35,7 @@ fun TwoTargetSwitchPreference(
   summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
   switchColors: SwitchColors = SwitchDefaults.switchColors(),
   onCheckedChange: ((Boolean) -> Unit)? = null,
-  onClick: (() -> Unit)? = null, // 左侧点击
+  onClick: ((Boolean) -> Unit)? = null, // 左侧点击
 ) {
   var checked by remember {
     mutableStateOf(key?.let { SafeSP.getBoolean(it, defValue) } ?: defValue)
@@ -72,7 +72,7 @@ fun TwoTargetSwitchPreference(
     },
     onClick = {
       if (enabled) {
-        onClick?.invoke()
+        onClick?.invoke(checked)
       }
     },
     enabled = enabled

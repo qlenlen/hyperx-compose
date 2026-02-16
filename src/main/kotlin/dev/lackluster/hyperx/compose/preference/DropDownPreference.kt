@@ -63,6 +63,7 @@ fun DropDownPreference(
     icon: ImageIcon? = null,
     title: String,
     summary: String? = null,
+    summaryProvider: ((DropDownEntry) -> String)? = null,
     entries: List<DropDownEntry>,
     key: String? = null,
     defValue: Int = 0,
@@ -168,6 +169,18 @@ fun DropDownPreference(
         }
     }
 
+    val currentEntry = entries.getOrNull(spValue)
+
+    val resolvedSummary: String? = when {
+        summaryProvider != null && currentEntry != null ->
+            summaryProvider(currentEntry)
+
+        summary != null ->
+            summary
+
+        else -> null
+    }
+
     BasicComponent(
         modifier = Modifier
             .pointerInput(Unit) {
@@ -185,7 +198,7 @@ fun DropDownPreference(
         insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),
         title = title,
         titleColor = titleColor,
-        summary = summary,
+        summary = resolvedSummary,
         summaryColor = summaryColor,
         startAction = {
             if (mode != DropDownMode.AlwaysOnRight && alignLeft && mode != DropDownMode.Dialog) {
