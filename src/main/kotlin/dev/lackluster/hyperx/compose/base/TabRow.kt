@@ -30,95 +30,95 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun TabRow(
-    modifier: Modifier = Modifier,
-    tabs: List<String>,
-    selectedTabIndex: Int,
-    colors: TabRowColors = TabRowDefaults.tabRowColors(),
-    cornerRadius: Dp = TabRowDefaults.TabRowCornerRadius,
-    onTabSelected: ((Int) -> Unit)? = null,
+  modifier: Modifier = Modifier,
+  tabs: List<String>,
+  selectedTabIndex: Int,
+  colors: TabRowColors = TabRowDefaults.tabRowColors(),
+  cornerRadius: Dp = TabRowDefaults.TabRowCornerRadius,
+  onTabSelected: ((Int) -> Unit)? = null,
 ) {
-    val currentOnTabSelected by rememberUpdatedState(onTabSelected)
-    val shape = remember(cornerRadius) { ContinuousRoundedRectangle(cornerRadius) }
+  val currentOnTabSelected by rememberUpdatedState(onTabSelected)
+  val shape = remember(cornerRadius) { ContinuousRoundedRectangle(cornerRadius) }
 
-    Row(
-        modifier = modifier
+  Row(
+    modifier = modifier
+      .fillMaxWidth()
+      .clip(shape),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(12.dp),
+  ) {
+    tabs.forEachIndexed { index, tabText ->
+      Surface(
+        shape = shape,
+        onClick = { currentOnTabSelected?.invoke(index) },
+        enabled = currentOnTabSelected != null,
+        color = colors.backgroundColor(selectedTabIndex == index),
+        modifier = Modifier
+          .weight(1.0f)
+          .semantics { role = Role.Tab }
+      ) {
+        Box(
+          modifier = Modifier
             .fillMaxWidth()
-            .clip(shape),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        tabs.forEachIndexed { index, tabText ->
-            Surface(
-                shape = shape,
-                onClick = { currentOnTabSelected?.invoke(index) },
-                enabled = currentOnTabSelected != null,
-                color = colors.backgroundColor(selectedTabIndex == index),
-                modifier = Modifier
-                    .weight(1.0f)
-                    .semantics { role = Role.Tab }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 40.dp)
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = tabText,
-                        color = colors.contentColor(selectedTabIndex == index),
-                        fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MiuixTheme.textStyles.subtitle
-                    )
-                }
-            }
+            .heightIn(min = 40.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+          contentAlignment = Alignment.Center
+        ) {
+          Text(
+            text = tabText,
+            color = colors.contentColor(selectedTabIndex == index),
+            fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = MiuixTheme.textStyles.subtitle
+          )
         }
+      }
     }
+  }
 }
 
 object TabRowDefaults {
-    /**
-     * The default corner radius of the [TabRow].
-     */
-    val TabRowCornerRadius = 12.dp
+  /**
+   * The default corner radius of the [TabRow].
+   */
+  val TabRowCornerRadius = 12.dp
 
-    /**
-     * The default corner radius of the [TabRow] with contour style.
-     */
+  /**
+   * The default corner radius of the [TabRow] with contour style.
+   */
 //    val TabRowWithContourCornerRadius = 10.dp
 
-    /**
-     * The default colors for the [TabRow].
-     */
-    @Composable
-    fun tabRowColors(
-        backgroundColor: Color = MiuixTheme.colorScheme.background,
-        contentColor: Color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-        selectedBackgroundColor: Color = MiuixTheme.colorScheme.surface,
-        selectedContentColor: Color = MiuixTheme.colorScheme.onSurface
-    ): TabRowColors = TabRowColors(
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        selectedBackgroundColor = selectedBackgroundColor,
-        selectedContentColor = selectedContentColor
-    )
+  /**
+   * The default colors for the [TabRow].
+   */
+  @Composable
+  fun tabRowColors(
+    backgroundColor: Color = MiuixTheme.colorScheme.background,
+    contentColor: Color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+    selectedBackgroundColor: Color = MiuixTheme.colorScheme.surface,
+    selectedContentColor: Color = MiuixTheme.colorScheme.onSurface
+  ): TabRowColors = TabRowColors(
+    backgroundColor = backgroundColor,
+    contentColor = contentColor,
+    selectedBackgroundColor = selectedBackgroundColor,
+    selectedContentColor = selectedContentColor
+  )
 }
 
 
 @Immutable
 class TabRowColors(
-    private val backgroundColor: Color,
-    private val contentColor: Color,
-    private val selectedBackgroundColor: Color,
-    private val selectedContentColor: Color
+  private val backgroundColor: Color,
+  private val contentColor: Color,
+  private val selectedBackgroundColor: Color,
+  private val selectedContentColor: Color
 ) {
-    @Stable
-    internal fun backgroundColor(selected: Boolean): Color =
-        if (selected) selectedBackgroundColor else backgroundColor
+  @Stable
+  internal fun backgroundColor(selected: Boolean): Color =
+    if (selected) selectedBackgroundColor else backgroundColor
 
-    @Stable
-    internal fun contentColor(selected: Boolean): Color =
-        if (selected) selectedContentColor else contentColor
+  @Stable
+  internal fun contentColor(selected: Boolean): Color =
+    if (selected) selectedContentColor else contentColor
 }

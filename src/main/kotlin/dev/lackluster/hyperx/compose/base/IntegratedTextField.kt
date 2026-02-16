@@ -24,54 +24,54 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
 
 @Composable
 fun IntegratedTextField(
-    text: String,
-    onTextChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    hint: String = "",
-    enabled: Boolean = true,
-    insideMargin: PaddingValues = PaddingValues(0.dp),
-    interactionSource: MutableInteractionSource? = null,
+  text: String,
+  onTextChange: (String) -> Unit,
+  modifier: Modifier = Modifier,
+  hint: String = "",
+  enabled: Boolean = true,
+  insideMargin: PaddingValues = PaddingValues(0.dp),
+  interactionSource: MutableInteractionSource? = null,
 ) {
-    val interaction = interactionSource ?: remember { MutableInteractionSource() }
-    val focused = interaction.collectIsFocusedAsState().value
-    val focusRequester = remember { FocusRequester() }
-    if (focused) {
-        focusRequester.requestFocus()
-    }
+  val interaction = interactionSource ?: remember { MutableInteractionSource() }
+  val focused = interaction.collectIsFocusedAsState().value
+  val focusRequester = remember { FocusRequester() }
+  if (focused) {
+    focusRequester.requestFocus()
+  }
 
-    BasicTextField(
-        value = text,
-        onValueChange = onTextChange,
-        modifier = modifier
-            .focusRequester(focusRequester)
-            .semantics {
-                onClick {
-                    focusRequester.requestFocus()
-                    true
-                }
-            },
-        enabled = enabled,
-        singleLine = true,
-        textStyle = MiuixTheme.textStyles.main.copy(
-            textAlign = TextAlign.End
-        ),
-        cursorBrush = SolidColor(colorScheme.primary),
-        interactionSource = interaction,
-        decorationBox =
-        @Composable { innerTextField ->
-            Box(
-                modifier = Modifier.padding(insideMargin),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                Text(
-                    text = if (text.isEmpty()) hint else "",
-                    color = RightActionDefaults.rightActionColors().color(enabled),
-                    textAlign = TextAlign.End,
-                    softWrap = false,
-                    maxLines = 1
-                )
-                innerTextField()
-            }
+  BasicTextField(
+    value = text,
+    onValueChange = onTextChange,
+    modifier = modifier
+      .focusRequester(focusRequester)
+      .semantics {
+        onClick {
+          focusRequester.requestFocus()
+          true
         }
-    )
+      },
+    enabled = enabled,
+    singleLine = true,
+    textStyle = MiuixTheme.textStyles.main.copy(
+      textAlign = TextAlign.End
+    ),
+    cursorBrush = SolidColor(colorScheme.primary),
+    interactionSource = interaction,
+    decorationBox =
+      @Composable { innerTextField ->
+        Box(
+          modifier = Modifier.padding(insideMargin),
+          contentAlignment = Alignment.CenterEnd
+        ) {
+          Text(
+            text = if (text.isEmpty()) hint else "",
+            color = RightActionDefaults.rightActionColors().color(enabled),
+            textAlign = TextAlign.End,
+            softWrap = false,
+            maxLines = 1
+          )
+          innerTextField()
+        }
+      }
+  )
 }

@@ -28,85 +28,85 @@ import dev.lackluster.hyperx.compose.navigation.MiuixNavHostDefaults.TRANSITION_
 
 @Composable
 fun rememberMiuixNavController(
-    vararg navigators: Navigator<out NavDestination>
+  vararg navigators: Navigator<out NavDestination>
 ): NavHostController =
-    rememberNavController(
-        remember { MiuixNavigator() },
-        *navigators
-    )
+  rememberNavController(
+    remember { MiuixNavigator() },
+    *navigators
+  )
 
 
 fun NavGraphBuilder.miuixComposable(
-    route: String,
-    arguments: List<NamedNavArgument> = emptyList(),
-    deepLinks: List<NavDeepLink> = emptyList(),
-    enterTransition:
-        (@JvmSuppressWildcards
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
-        null,
-    exitTransition:
-        (@JvmSuppressWildcards
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? =
-        null,
-    popEnterTransition:
-        (@JvmSuppressWildcards
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
-        enterTransition,
-    popExitTransition:
-        (@JvmSuppressWildcards
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? =
-        exitTransition,
-    sizeTransform:
-        (@JvmSuppressWildcards
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)? =
-        null,
-    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+  route: String,
+  arguments: List<NamedNavArgument> = emptyList(),
+  deepLinks: List<NavDeepLink> = emptyList(),
+  enterTransition:
+  (@JvmSuppressWildcards
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
+    null,
+  exitTransition:
+  (@JvmSuppressWildcards
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? =
+    null,
+  popEnterTransition:
+  (@JvmSuppressWildcards
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
+    enterTransition,
+  popExitTransition:
+  (@JvmSuppressWildcards
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? =
+    exitTransition,
+  sizeTransform:
+  (@JvmSuppressWildcards
+  AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)? =
+    null,
+  content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
-    destination(
-        MiuixNavigatorDestinationBuilder(provider[MiuixNavigator::class], route, content)
-            .apply {
-                arguments.forEach { (argumentName, argument) -> argument(argumentName, argument) }
-                deepLinks.forEach { deepLink -> deepLink(deepLink) }
-                this.enterTransition = enterTransition
-                this.exitTransition = exitTransition
-                this.popEnterTransition = popEnterTransition
-                this.popExitTransition = popExitTransition
-                this.sizeTransform = sizeTransform
-            }
-    )
+  destination(
+    MiuixNavigatorDestinationBuilder(provider[MiuixNavigator::class], route, content)
+      .apply {
+        arguments.forEach { (argumentName, argument) -> argument(argumentName, argument) }
+        deepLinks.forEach { deepLink -> deepLink(deepLink) }
+        this.enterTransition = enterTransition
+        this.exitTransition = exitTransition
+        this.popEnterTransition = popEnterTransition
+        this.popExitTransition = popExitTransition
+        this.sizeTransform = sizeTransform
+      }
+  )
 }
 
 @Stable
 fun miuixEnterTransition(): EnterTransition =
-    slideInHorizontally(
-        initialOffsetX = { it },
-        animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
-    )
+  slideInHorizontally(
+    initialOffsetX = { it },
+    animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
+  )
 
 @Stable
 fun miuixExitTransition(): ExitTransition =
-    slideOutHorizontally(
-        targetOffsetX = { -it / 4 },
-        animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
-    ) + fadeOut(
-        targetAlpha = 0.5f,
-        animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
-    )
+  slideOutHorizontally(
+    targetOffsetX = { -it / 4 },
+    animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
+  ) + fadeOut(
+    targetAlpha = 0.5f,
+    animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
+  )
 
 @Stable
 fun miuixPopEnterTransition(): EnterTransition =
-    slideInHorizontally(
-        initialOffsetX = { -it / 4 },
-        animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
-    ) + fadeIn(
-        initialAlpha = 0.5f,
-        animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
-    )
+  slideInHorizontally(
+    initialOffsetX = { -it / 4 },
+    animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
+  ) + fadeIn(
+    initialAlpha = 0.5f,
+    animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
+  )
 
 @Stable
 fun miuixPopExitTransition(): ExitTransition =
-    slideOutHorizontally(
-        targetOffsetX = { it },
-        animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
-    )
+  slideOutHorizontally(
+    targetOffsetX = { it },
+    animationSpec = tween(TRANSITION_DURATION, 0, NavAnimationEasing)
+  )
 

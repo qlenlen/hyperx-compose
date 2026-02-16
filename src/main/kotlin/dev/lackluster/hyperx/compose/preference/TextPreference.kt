@@ -29,72 +29,72 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
 
 @Composable
 fun TextPreference(
-    icon: ImageIcon? = null,
-    title: String,
-    summary: String? = null,
-    value: String? = null,
-    enabled: Boolean = true,
-    titleColor: BasicComponentColors = BasicComponentDefaults.titleColor(),
-    summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
-    rightActionColor: RightActionColor = RightActionDefaults.rightActionColors(),
-    onClick: (() -> Unit)? = null,
+  icon: ImageIcon? = null,
+  title: String,
+  summary: String? = null,
+  value: String? = null,
+  enabled: Boolean = true,
+  titleColor: BasicComponentColors = BasicComponentDefaults.titleColor(),
+  summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
+  rightActionColor: RightActionColor = RightActionDefaults.rightActionColors(),
+  onClick: (() -> Unit)? = null,
 ) {
-    val updatedOnClick by rememberUpdatedState(onClick)
+  val updatedOnClick by rememberUpdatedState(onClick)
 
-    BasicComponent(
-        insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),
-        title = title,
-        titleColor = titleColor,
-        summary = summary,
-        summaryColor = summaryColor,
-        startAction = {
-            icon?.let {
-                DrawableResIcon(it)
-            }
-        },
-        endActions = {
-            value?.let {
-                Text(
-                    modifier = Modifier.widthIn(max = 130.dp),
-                    text = it,
-                    fontSize = MiuixTheme.textStyles.body2.fontSize,
-                    color = rightActionColor.color(enabled),
-                    textAlign = TextAlign.End,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
-            }
-            Image(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .size(10.dp, 16.dp),
-                imageVector = MiuixIcons.Basic.ArrowRight,
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(rightActionColor.color(enabled)),
-            )
-        },
-        onClick = {
-            if (enabled) {
-                updatedOnClick?.invoke()
-            }
-        },
-        enabled = enabled
-    )
+  BasicComponent(
+    insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),
+    title = title,
+    titleColor = titleColor,
+    summary = summary,
+    summaryColor = summaryColor,
+    startAction = {
+      icon?.let {
+        DrawableResIcon(it)
+      }
+    },
+    endActions = {
+      value?.let {
+        Text(
+          modifier = Modifier.widthIn(max = 130.dp),
+          text = it,
+          fontSize = MiuixTheme.textStyles.body2.fontSize,
+          color = rightActionColor.color(enabled),
+          textAlign = TextAlign.End,
+          overflow = TextOverflow.Ellipsis,
+          maxLines = 2
+        )
+      }
+      Image(
+        modifier = Modifier
+          .padding(start = 8.dp)
+          .size(10.dp, 16.dp),
+        imageVector = MiuixIcons.Basic.ArrowRight,
+        contentDescription = null,
+        colorFilter = ColorFilter.tint(rightActionColor.color(enabled)),
+      )
+    },
+    onClick = {
+      if (enabled) {
+        updatedOnClick?.invoke()
+      }
+    },
+    enabled = enabled
+  )
 }
 
 object RightActionDefaults {
-    @Composable
-    fun rightActionColors() = RightActionColor(
-        color = colorScheme.onSurfaceVariantActions,
-        disabledColor = colorScheme.disabledOnSecondaryVariant
-    )
+  @Composable
+  fun rightActionColors() = RightActionColor(
+    color = colorScheme.onSurfaceVariantActions,
+    disabledColor = colorScheme.disabledOnSecondaryVariant
+  )
 }
 
 @Immutable
 class RightActionColor(
-    private val color: Color,
-    private val disabledColor: Color
+  private val color: Color,
+  private val disabledColor: Color
 ) {
-    @Stable
-    fun color(enabled: Boolean): Color = if (enabled) color else disabledColor
+  @Stable
+  fun color(enabled: Boolean): Color = if (enabled) color else disabledColor
 }

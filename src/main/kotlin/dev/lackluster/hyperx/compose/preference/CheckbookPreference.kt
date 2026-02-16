@@ -21,53 +21,55 @@ import top.yukonga.miuix.kmp.basic.CheckboxDefaults
 
 @Composable
 fun CheckboxPreference(
-    icon: ImageIcon? = null,
-    title: String,
-    summary: String? = null,
-    key: String? = null,
-    defValue: Boolean = false,
-    enabled: Boolean = true,
-    titleColor: BasicComponentColors = BasicComponentDefaults.titleColor(),
-    summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
-    checkboxColors: CheckboxColors = CheckboxDefaults.checkboxColors(),
-    onCheckedChange: ((Boolean) -> Unit)? = null,
+  icon: ImageIcon? = null,
+  title: String,
+  summary: String? = null,
+  key: String? = null,
+  defValue: Boolean = false,
+  enabled: Boolean = true,
+  titleColor: BasicComponentColors = BasicComponentDefaults.titleColor(),
+  summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
+  checkboxColors: CheckboxColors = CheckboxDefaults.checkboxColors(),
+  onCheckedChange: ((Boolean) -> Unit)? = null,
 ) {
-    var spValue by remember { mutableStateOf(
-        key?.let { SafeSP.getBoolean(it, defValue) } ?: defValue
-    ) }
-    val updatedOnCheckedChange by rememberUpdatedState(onCheckedChange)
-
-    BasicComponent(
-        insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),
-        title = title,
-        titleColor = titleColor,
-        summary = summary,
-        summaryColor = summaryColor,
-        startAction = {
-            icon?.let {
-                DrawableResIcon(it)
-            }
-        },
-        endActions = {
-            Checkbox(
-                modifier = Modifier,
-                checked = spValue,
-                onCheckedChange = { newValue ->
-                    spValue = !spValue
-                    key?.let { SafeSP.putAny(it, newValue) }
-                    updatedOnCheckedChange?.invoke(newValue)
-                },
-                enabled = enabled,
-                colors = checkboxColors
-            )
-        },
-        onClick = {
-            if (enabled) {
-                spValue = !spValue
-                key?.let { SafeSP.putAny(it, spValue) }
-                updatedOnCheckedChange?.invoke(spValue)
-            }
-        },
-        enabled = enabled
+  var spValue by remember {
+    mutableStateOf(
+      key?.let { SafeSP.getBoolean(it, defValue) } ?: defValue
     )
+  }
+  val updatedOnCheckedChange by rememberUpdatedState(onCheckedChange)
+
+  BasicComponent(
+    insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),
+    title = title,
+    titleColor = titleColor,
+    summary = summary,
+    summaryColor = summaryColor,
+    startAction = {
+      icon?.let {
+        DrawableResIcon(it)
+      }
+    },
+    endActions = {
+      Checkbox(
+        modifier = Modifier,
+        checked = spValue,
+        onCheckedChange = { newValue ->
+          spValue = !spValue
+          key?.let { SafeSP.putAny(it, newValue) }
+          updatedOnCheckedChange?.invoke(newValue)
+        },
+        enabled = enabled,
+        colors = checkboxColors
+      )
+    },
+    onClick = {
+      if (enabled) {
+        spValue = !spValue
+        key?.let { SafeSP.putAny(it, spValue) }
+        updatedOnCheckedChange?.invoke(spValue)
+      }
+    },
+    enabled = enabled
+  )
 }

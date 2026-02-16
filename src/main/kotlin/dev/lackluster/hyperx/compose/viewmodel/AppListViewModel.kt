@@ -20,67 +20,68 @@ import java.text.Collator
 import java.util.Locale
 
 class AppListViewModel(
-    private val comparator: Comparator<AppInfo> = compareBy { 0 }
+  private val comparator: Comparator<AppInfo> = compareBy { 0 }
 ) : ViewModel() {
-    companion object {
-        private const val TAG = "AppListViewModel"
-        private var apps by mutableStateOf<List<AppInfo>>(emptyList())
+  companion object {
+    private const val TAG = "AppListViewModel"
+    private var apps by mutableStateOf<List<AppInfo>>(emptyList())
+  }
+
+  @Parcelize
+  data class AppInfo(
+    val label: String,
+    val packageInfo: PackageInfo
+  ) : Parcelable {
+    val packageName: String
+      get() = packageInfo.packageName
+    val uid: Int
+      get() = packageInfo.applicationInfo!!.uid
+  }
+
+  var search by mutableStateOf("")
+  var showSystemApps by mutableStateOf(false)
+  var isRefreshing by mutableStateOf(false)
+    private set
+
+  private val sortedList by derivedStateOf {
+    val comparator =
+      comparator.then(compareBy(Collator.getInstance(Locale.getDefault()), AppInfo::label))
+    apps.sortedWith(comparator).also {
+      isRefreshing = false
     }
+  }
 
-    @Parcelize
-    data class AppInfo(
-        val label: String,
-        val packageInfo: PackageInfo
-    ) : Parcelable {
-        val packageName: String
-            get() = packageInfo.packageName
-        val uid: Int
-            get() = packageInfo.applicationInfo!!.uid
+  val appList by derivedStateOf {
+    sortedList.filter {
+      it.label.contains(search, true) || it.packageName.contains(
+        search,
+        true
+      ) || Pinyin.toPinyin(it.label, "").contains(search, true)
+    }.filter {
+      it.uid == 2000 // Always show shell
+          || showSystemApps || it.packageInfo.applicationInfo!!.flags.and(ApplicationInfo.FLAG_SYSTEM) == 0
     }
+  }
 
-    var search by mutableStateOf("")
-    var showSystemApps by mutableStateOf(false)
-    var isRefreshing by mutableStateOf(false)
-        private set
+  @SuppressLint("QueryPermissionsNeeded")
+  suspend fun fetchAppList(context: Context) {
+    isRefreshing = true
 
-    private val sortedList by derivedStateOf {
-        val comparator = comparator.then(compareBy(Collator.getInstance(Locale.getDefault()), AppInfo::label))
-        apps.sortedWith(comparator).also {
-            isRefreshing = false
-        }
+    withContext(Dispatchers.IO) {
+      val pm = context.packageManager
+
+      val start = SystemClock.elapsedRealtime()
+
+      val packages = pm.getInstalledPackages(0)
+
+      apps = packages.map {
+        val appInfo = it.applicationInfo!!
+        AppInfo(
+          label = appInfo.loadLabel(pm).toString(),
+          packageInfo = it,
+        )
+      }
+      Log.i(TAG, "load cost: ${SystemClock.elapsedRealtime() - start}")
     }
-
-    val appList by derivedStateOf {
-        sortedList.filter {
-            it.label.contains(search, true) || it.packageName.contains(
-                search,
-                true
-            ) || Pinyin.toPinyin(it.label, "").contains(search, true)
-        }.filter {
-            it.uid == 2000 // Always show shell
-                    || showSystemApps || it.packageInfo.applicationInfo!!.flags.and(ApplicationInfo.FLAG_SYSTEM) == 0
-        }
-    }
-
-    @SuppressLint("QueryPermissionsNeeded")
-    suspend fun fetchAppList(context: Context) {
-        isRefreshing = true
-
-        withContext(Dispatchers.IO) {
-            val pm = context.packageManager
-
-            val start = SystemClock.elapsedRealtime()
-
-            val packages = pm.getInstalledPackages(0)
-
-            apps = packages.map {
-                val appInfo = it.applicationInfo!!
-                AppInfo(
-                    label = appInfo.loadLabel(pm).toString(),
-                    packageInfo = it,
-                )
-            }
-            Log.i(TAG, "load cost: ${SystemClock.elapsedRealtime() - start}")
-        }
-    }
+  }
 }

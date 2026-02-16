@@ -28,72 +28,72 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FullScreenDialog(
-    navController: NavController,
-    adjustPadding: PaddingValues,
-    title: String,
-    blurEnabled: MutableState<Boolean> = mutableStateOf(true),
-    blurTintAlphaLight: MutableFloatState = mutableFloatStateOf(0.6f),
-    blurTintAlphaDark: MutableFloatState = mutableFloatStateOf(0.5f),
-    mode: BasePageDefaults.Mode = BasePageDefaults.Mode.FULL,
-    onNegativeButton: (() -> Unit)? = {
-        navController.popBackStack()
-    },
-    onPositiveButton: (() -> Unit)? = {
-        navController.popBackStack()
-    },
-    content: LazyListScope.() -> Unit
+  navController: NavController,
+  adjustPadding: PaddingValues,
+  title: String,
+  blurEnabled: MutableState<Boolean> = mutableStateOf(true),
+  blurTintAlphaLight: MutableFloatState = mutableFloatStateOf(0.6f),
+  blurTintAlphaDark: MutableFloatState = mutableFloatStateOf(0.5f),
+  mode: BasePageDefaults.Mode = BasePageDefaults.Mode.FULL,
+  onNegativeButton: (() -> Unit)? = {
+    navController.popBackStack()
+  },
+  onPositiveButton: (() -> Unit)? = {
+    navController.popBackStack()
+  },
+  content: LazyListScope.() -> Unit
 ) {
-    val currentOnNegativeButton by rememberUpdatedState(onNegativeButton)
-    val currentOnPositiveButton by rememberUpdatedState(onPositiveButton)
+  val currentOnNegativeButton by rememberUpdatedState(onNegativeButton)
+  val currentOnPositiveButton by rememberUpdatedState(onPositiveButton)
 
-    BackHandler(enabled = true) {
-        currentOnNegativeButton?.invoke()
-    }
+  BackHandler(enabled = true) {
+    currentOnNegativeButton?.invoke()
+  }
 
-    BasePage(
-        navController,
-        adjustPadding,
-        title,
-        blurEnabled,
-        blurTintAlphaLight,
-        blurTintAlphaDark,
-        mode,
-        navigationIcon = { padding ->
-            IconButton(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(start = 21.dp)
-                    .size(40.dp),
-                onClick = {
-                    currentOnNegativeButton?.invoke()
-                }
-            ) {
-                Icon(
-                    modifier = Modifier.size(26.dp),
-                    imageVector = MiuixIcons.ImmersionClose,
-                    contentDescription = "Close",
-                    tint = MiuixTheme.colorScheme.onSurfaceSecondary
-                )
-            }
-        },
-        actions = { padding ->
-            IconButton(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(end = 21.dp)
-                    .size(40.dp),
-                onClick = {
-                    currentOnPositiveButton?.invoke()
-                }
-            ) {
-                Icon(
-                    modifier = Modifier.size(26.dp),
-                    imageVector = MiuixIcons.ImmersionConfirm,
-                    contentDescription = "Confirm",
-                    tint = MiuixTheme.colorScheme.onSurfaceSecondary
-                )
-            }
-        },
-        content = content
-    )
+  BasePage(
+    navController,
+    adjustPadding,
+    title,
+    blurEnabled,
+    blurTintAlphaLight,
+    blurTintAlphaDark,
+    mode,
+    navigationIcon = { padding ->
+      IconButton(
+        modifier = Modifier
+          .padding(padding)
+          .padding(start = 21.dp)
+          .size(40.dp),
+        onClick = {
+          currentOnNegativeButton?.invoke()
+        }
+      ) {
+        Icon(
+          modifier = Modifier.size(26.dp),
+          imageVector = MiuixIcons.ImmersionClose,
+          contentDescription = "Close",
+          tint = MiuixTheme.colorScheme.onSurfaceSecondary
+        )
+      }
+    },
+    actions = { padding ->
+      IconButton(
+        modifier = Modifier
+          .padding(padding)
+          .padding(end = 21.dp)
+          .size(40.dp),
+        onClick = {
+          currentOnPositiveButton?.invoke()
+        }
+      ) {
+        Icon(
+          modifier = Modifier.size(26.dp),
+          imageVector = MiuixIcons.ImmersionConfirm,
+          contentDescription = "Confirm",
+          tint = MiuixTheme.colorScheme.onSurfaceSecondary
+        )
+      }
+    },
+    content = content
+  )
 }

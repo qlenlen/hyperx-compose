@@ -18,60 +18,60 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 
 @Composable
 fun AlertDialog(
-    visibility: MutableState<Boolean>,
-    title: String?,
-    message: String? = null,
-    cancelable: Boolean = true,
-    mode: AlertDialogMode = AlertDialogMode.Positive,
-    negativeText: String = stringResource(R.string.button_cancel),
-    positiveText: String = stringResource(R.string.button_ok),
-    onNegativeButton: (() -> Unit)? = null,
-    onPositiveButton: (() -> Unit)? = null,
+  visibility: MutableState<Boolean>,
+  title: String?,
+  message: String? = null,
+  cancelable: Boolean = true,
+  mode: AlertDialogMode = AlertDialogMode.Positive,
+  negativeText: String = stringResource(R.string.button_cancel),
+  positiveText: String = stringResource(R.string.button_ok),
+  onNegativeButton: (() -> Unit)? = null,
+  onPositiveButton: (() -> Unit)? = null,
 ) {
-    val hapticFeedback = LocalHapticFeedback.current
-    SuperDialog(
-        title = title,
-        summary = message,
-        show = visibility,
-        onDismissRequest = {
-            if (cancelable) {
-                visibility.value = false
-            }
-        }
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            if (mode != AlertDialogMode.Positive) {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    text = negativeText,
-                    onClick = {
-                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                        onNegativeButton?.let { it1 -> it1() } ?: visibility.apply { value = false }
-                    }
-                )
-            }
-            if (mode == AlertDialogMode.NegativeAndPositive) {
-                Spacer(Modifier.width(20.dp))
-            }
-            if (mode != AlertDialogMode.Negative) {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    text = positiveText,
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                    onClick = {
-                        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                        onPositiveButton?.let { it1 -> it1() } ?: visibility.apply { value = false }
-                    }
-                )
-            }
-        }
+  val hapticFeedback = LocalHapticFeedback.current
+  SuperDialog(
+    title = title,
+    summary = message,
+    show = visibility,
+    onDismissRequest = {
+      if (cancelable) {
+        visibility.value = false
+      }
     }
+  ) {
+    Row(
+      horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+      if (mode != AlertDialogMode.Positive) {
+        TextButton(
+          modifier = Modifier.weight(1f),
+          text = negativeText,
+          onClick = {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+            onNegativeButton?.let { it1 -> it1() } ?: visibility.apply { value = false }
+          }
+        )
+      }
+      if (mode == AlertDialogMode.NegativeAndPositive) {
+        Spacer(Modifier.width(20.dp))
+      }
+      if (mode != AlertDialogMode.Negative) {
+        TextButton(
+          modifier = Modifier.weight(1f),
+          text = positiveText,
+          colors = ButtonDefaults.textButtonColorsPrimary(),
+          onClick = {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+            onPositiveButton?.let { it1 -> it1() } ?: visibility.apply { value = false }
+          }
+        )
+      }
+    }
+  }
 }
 
 enum class AlertDialogMode {
-    Negative,
-    Positive,
-    NegativeAndPositive,
+  Negative,
+  Positive,
+  NegativeAndPositive,
 }

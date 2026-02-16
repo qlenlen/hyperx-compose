@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -48,98 +46,106 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 @Composable
 fun BasePage(
-    navController: NavController,
-    adjustPadding: PaddingValues,
-    title: String,
-    blurEnabled: MutableState<Boolean> = mutableStateOf(true),
-    blurTintAlphaLight: MutableFloatState = mutableFloatStateOf(0.6f),
-    blurTintAlphaDark: MutableFloatState = mutableFloatStateOf(0.5f),
-    mode: BasePageDefaults.Mode = BasePageDefaults.Mode.FULL,
-    navigationIcon: @Composable (padding: PaddingValues) -> Unit = { padding ->
-        IconButton(
-            modifier = Modifier
-                .padding(padding)
-                .padding(start = 21.dp)
-                .size(40.dp),
-            onClick = {
-                navController.popBackStack()
-            }
-        ) {
-            Icon(
-                modifier = Modifier.size(26.dp),
-                imageVector = MiuixIcons.Back,
-                contentDescription = "Back",
-                tint = colorScheme.onSurfaceSecondary
-            )
-        }
-    },
-    actions: @Composable RowScope.(padding: PaddingValues) -> Unit = {},
-    content: LazyListScope.() -> Unit
+  navController: NavController,
+  adjustPadding: PaddingValues,
+  title: String,
+  blurEnabled: MutableState<Boolean> = mutableStateOf(true),
+  blurTintAlphaLight: MutableFloatState = mutableFloatStateOf(0.6f),
+  blurTintAlphaDark: MutableFloatState = mutableFloatStateOf(0.5f),
+  mode: BasePageDefaults.Mode = BasePageDefaults.Mode.FULL,
+  navigationIcon: @Composable (padding: PaddingValues) -> Unit = { padding ->
+    IconButton(
+      modifier = Modifier
+          .padding(padding)
+          .padding(start = 21.dp)
+          .size(40.dp),
+      onClick = {
+        navController.popBackStack()
+      }
+    ) {
+      Icon(
+        modifier = Modifier.size(26.dp),
+        imageVector = MiuixIcons.Back,
+        contentDescription = "Back",
+        tint = colorScheme.onSurfaceSecondary
+      )
+    }
+  },
+  actions: @Composable RowScope.(padding: PaddingValues) -> Unit = {},
+  content: LazyListScope.() -> Unit
 ) {
-    val topAppBarBackground = colorScheme.surface
-    val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
-    val listState = rememberLazyListState()
-    val topBarBlurState by remember {
-        derivedStateOf {
-            blurEnabled.value &&
-                    scrollBehavior.state.collapsedFraction >= 1.0f &&
-                    (listState.isScrollInProgress || listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 12)
-        }
+  val topAppBarBackground = colorScheme.surface
+  val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
+  val listState = rememberLazyListState()
+  val topBarBlurState by remember {
+    derivedStateOf {
+      blurEnabled.value &&
+          scrollBehavior.state.collapsedFraction >= 1.0f &&
+          (listState.isScrollInProgress || listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 12)
     }
-    val topBarBlurTintAlpha = remember { mutableFloatStateOf(
-        if (topAppBarBackground.luminance() >= 0.5f) blurTintAlphaLight.floatValue
-        else blurTintAlphaDark.floatValue
-    ) }
-    val layoutDirection = LocalLayoutDirection.current
-    val systemBarInsets = WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal).asPaddingValues()
-    val navigationIconPadding = PaddingValues.Absolute(
-        left = if (mode != BasePageDefaults.Mode.SPLIT_RIGHT) systemBarInsets.calculateLeftPadding(layoutDirection) else 0.dp
+  }
+  val topBarBlurTintAlpha = remember {
+    mutableFloatStateOf(
+      if (topAppBarBackground.luminance() >= 0.5f) blurTintAlphaLight.floatValue
+      else blurTintAlphaDark.floatValue
     )
-    val actionsPadding = PaddingValues.Absolute(
-        right = if (mode != BasePageDefaults.Mode.SPLIT_LEFT) systemBarInsets.calculateRightPadding(layoutDirection) else 0.dp
-    )
-    HazeScaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = { contentPadding ->
-            TopAppBar(
-                color = topAppBarBackground.copy(
-                    if (topBarBlurState) 0f else 1f
-                ),
-                title = title,
-                scrollBehavior = scrollBehavior,
-                navigationIcon = { navigationIcon.invoke(navigationIconPadding) },
-                actions = { actions(this, actionsPadding) },
-                horizontalPadding = 28.dp + contentPadding.calculateLeftPadding(LocalLayoutDirection.current)
-            )
-        },
-        blurTopBar = blurEnabled.value,
-        hazeStyle = HazeStyle(
-            blurRadius = 66.dp,
-            backgroundColor = topAppBarBackground,
-            tint = HazeTint(
-                topAppBarBackground.copy(alpha = topBarBlurTintAlpha.floatValue),
-            )
+  }
+  val layoutDirection = LocalLayoutDirection.current
+  val systemBarInsets =
+    WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal)
+      .asPaddingValues()
+  val navigationIconPadding = PaddingValues.Absolute(
+    left = if (mode != BasePageDefaults.Mode.SPLIT_RIGHT) systemBarInsets.calculateLeftPadding(
+      layoutDirection
+    ) else 0.dp
+  )
+  val actionsPadding = PaddingValues.Absolute(
+    right = if (mode != BasePageDefaults.Mode.SPLIT_LEFT) systemBarInsets.calculateRightPadding(
+      layoutDirection
+    ) else 0.dp
+  )
+  HazeScaffold(
+    modifier = Modifier.fillMaxSize(),
+    topBar = { contentPadding ->
+      TopAppBar(
+        color = topAppBarBackground.copy(
+          if (topBarBlurState) 0f else 1f
         ),
-        adjustPadding = adjustPadding,
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .overScrollVertical()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .scrollEndHaptic()
-                .fillMaxHeight()
-                .background(colorScheme.surface),
-            state = listState,
-            contentPadding = paddingValues,
-            content = content
-        )
-    }
+        title = title,
+        scrollBehavior = scrollBehavior,
+        navigationIcon = { navigationIcon.invoke(navigationIconPadding) },
+        actions = { actions(this, actionsPadding) },
+        horizontalPadding = 28.dp + contentPadding.calculateLeftPadding(LocalLayoutDirection.current)
+      )
+    },
+    blurTopBar = blurEnabled.value,
+    hazeStyle = HazeStyle(
+      blurRadius = 66.dp,
+      backgroundColor = topAppBarBackground,
+      tint = HazeTint(
+        topAppBarBackground.copy(alpha = topBarBlurTintAlpha.floatValue),
+      )
+    ),
+    adjustPadding = adjustPadding,
+  ) { paddingValues ->
+    LazyColumn(
+      modifier = Modifier
+          .overScrollVertical()
+          .nestedScroll(scrollBehavior.nestedScrollConnection)
+          .scrollEndHaptic()
+          .fillMaxHeight()
+          .background(colorScheme.surface),
+      state = listState,
+      contentPadding = paddingValues,
+      content = content
+    )
+  }
 }
 
 object BasePageDefaults {
-    enum class Mode {
-        FULL,
-        SPLIT_LEFT,
-        SPLIT_RIGHT
-    }
+  enum class Mode {
+    FULL,
+    SPLIT_LEFT,
+    SPLIT_RIGHT
+  }
 }

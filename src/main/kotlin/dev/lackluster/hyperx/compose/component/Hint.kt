@@ -27,52 +27,52 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun Hint(
-    modifier: Modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-    text: String,
-    foregroundColor: Color = colorResource(R.color.hyperx_hint_fg),
-    backgroundColor: Color = colorResource(R.color.hyperx_hint_bg),
-    contentPadding: PaddingValues = CardDefaults.contentPadding,
-    closeable: Boolean = false,
-    onClose: (() -> Unit)? = null
+  modifier: Modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+  text: String,
+  foregroundColor: Color = colorResource(R.color.hyperx_hint_fg),
+  backgroundColor: Color = colorResource(R.color.hyperx_hint_bg),
+  contentPadding: PaddingValues = CardDefaults.contentPadding,
+  closeable: Boolean = false,
+  onClose: (() -> Unit)? = null
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(backgroundColor, foregroundColor)
+  Card(
+    modifier = modifier
+      .fillMaxWidth(),
+    colors = CardDefaults.cardColors(backgroundColor, foregroundColor)
+  ) {
+    Row(
+      modifier = Modifier
+        .heightIn(min = 60.dp)
+        .padding(contentPadding)
+        .fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .heightIn(min = 60.dp)
-                .padding(contentPadding)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+      Text(
+        modifier = Modifier.weight(1.0f),
+        text = text,
+        fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+        fontWeight = FontWeight.Medium,
+        color = foregroundColor,
+        textAlign = TextAlign.Start
+      )
+      if (closeable) {
+        IconButton(
+          modifier = Modifier
+            .padding(start = 16.dp)
+            .size(16.dp),
+          onClick = {
+            onClose?.invoke()
+          }
         ) {
-            Text(
-                modifier = Modifier.weight(1.0f),
-                text = text,
-                fontSize = MiuixTheme.textStyles.subtitle.fontSize,
-                fontWeight = FontWeight.Medium,
-                color = foregroundColor,
-                textAlign = TextAlign.Start
-            )
-            if (closeable) {
-                IconButton(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .size(16.dp),
-                    onClick = {
-                        onClose?.invoke()
-                    }
-                ) {
-                    Icon(
-                        modifier = Modifier.size(11.dp),
-                        imageVector = MiuixIcons.HintClose,
-                        contentDescription = "Close",
-                        tint = foregroundColor
-                    )
-                }
-            }
+          Icon(
+            modifier = Modifier.size(11.dp),
+            imageVector = MiuixIcons.HintClose,
+            contentDescription = "Close",
+            tint = foregroundColor
+          )
         }
+      }
     }
+  }
 }

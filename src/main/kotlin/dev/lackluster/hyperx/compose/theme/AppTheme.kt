@@ -8,11 +8,11 @@ import top.yukonga.miuix.kmp.theme.lightColorScheme
 
 @Composable
 fun AppTheme(
-    content: @Composable () -> Unit
+  content: @Composable () -> Unit
 ) {
-    MiuixTheme(
-        colors = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
-    ) {
-        content()
-    }
+  MiuixTheme(
+    colors = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
+  ) {
+    content()
+  }
 }

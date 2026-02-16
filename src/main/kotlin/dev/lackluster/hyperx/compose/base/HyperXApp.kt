@@ -52,193 +52,215 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtils
 
 @Composable
 fun HyperXApp(
-    autoSplitView: MutableState<Boolean> = mutableStateOf(true),
-    mainPageContent: @Composable (navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit,
-    emptyPageContent: @Composable () -> Unit = { DefaultEmptyPage() },
-    otherPageBuilder: (NavGraphBuilder.(navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit)? = null
+  autoSplitView: MutableState<Boolean> = mutableStateOf(true),
+  mainPageContent: @Composable (navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit,
+  emptyPageContent: @Composable () -> Unit = { DefaultEmptyPage() },
+  otherPageBuilder: (NavGraphBuilder.(navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit)? = null
 ) {
-    AppTheme {
-        val configuration = LocalConfiguration.current
-        val isLandscape by rememberUpdatedState(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-        val density = LocalDensity.current
-        val windowInfo by rememberUpdatedState(LocalWindowInfo.current)
-        val windowWidth by rememberUpdatedState(windowInfo.containerDpSize.width / density.density)
-        val windowHeight by rememberUpdatedState(windowInfo.containerDpSize.height / density.density)
-        val largeScreen by remember { derivedStateOf { (windowHeight >= 480.dp && windowWidth >= 840.dp) } }
-        val appRootLayout: AppRootLayout
-        val normalLayoutPadding: PaddingValues
-        val splitRightWeight: Float
-        if (autoSplitView.value && largeScreen && isLandscape) {
-            appRootLayout = AppRootLayout.Split12
-            normalLayoutPadding = PaddingValues(0.dp)
-            splitRightWeight = 2.0f
-        } else if (autoSplitView.value && (largeScreen || isLandscape)) {
-            appRootLayout = AppRootLayout.Split11
-            normalLayoutPadding = PaddingValues(0.dp)
-            splitRightWeight = 1.0f
-        } else if (largeScreen) {
-            appRootLayout = AppRootLayout.LargeScreen
-            normalLayoutPadding = PaddingValues(horizontal = windowWidth * 0.1f)
-            splitRightWeight = 1.0f
-        } else {
-            appRootLayout = AppRootLayout.Normal
-            normalLayoutPadding = PaddingValues(0.dp)
-            splitRightWeight = 1.0f
-        }
-        if (appRootLayout == AppRootLayout.Split11 || appRootLayout == AppRootLayout.Split12) {
-            SplitLayout(mainPageContent, emptyPageContent, otherPageBuilder, 1.0f, splitRightWeight)
-        } else {
-            NormalLayout(mainPageContent, otherPageBuilder, normalLayoutPadding)
-        }
-        MiuixPopupUtils.MiuixPopupHost()
+  AppTheme {
+    val configuration = LocalConfiguration.current
+    val isLandscape by rememberUpdatedState(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+    val density = LocalDensity.current
+    val windowInfo by rememberUpdatedState(LocalWindowInfo.current)
+    val windowWidth by rememberUpdatedState(windowInfo.containerDpSize.width / density.density)
+    val windowHeight by rememberUpdatedState(windowInfo.containerDpSize.height / density.density)
+    val largeScreen by remember { derivedStateOf { (windowHeight >= 480.dp && windowWidth >= 840.dp) } }
+    val appRootLayout: AppRootLayout
+    val normalLayoutPadding: PaddingValues
+    val splitRightWeight: Float
+    if (autoSplitView.value && largeScreen && isLandscape) {
+      appRootLayout = AppRootLayout.Split12
+      normalLayoutPadding = PaddingValues(0.dp)
+      splitRightWeight = 2.0f
+    } else if (autoSplitView.value && (largeScreen || isLandscape)) {
+      appRootLayout = AppRootLayout.Split11
+      normalLayoutPadding = PaddingValues(0.dp)
+      splitRightWeight = 1.0f
+    } else if (largeScreen) {
+      appRootLayout = AppRootLayout.LargeScreen
+      normalLayoutPadding = PaddingValues(horizontal = windowWidth * 0.1f)
+      splitRightWeight = 1.0f
+    } else {
+      appRootLayout = AppRootLayout.Normal
+      normalLayoutPadding = PaddingValues(0.dp)
+      splitRightWeight = 1.0f
     }
+    if (appRootLayout == AppRootLayout.Split11 || appRootLayout == AppRootLayout.Split12) {
+      SplitLayout(mainPageContent, emptyPageContent, otherPageBuilder, 1.0f, splitRightWeight)
+    } else {
+      NormalLayout(mainPageContent, otherPageBuilder, normalLayoutPadding)
+    }
+    MiuixPopupUtils.MiuixPopupHost()
+  }
 }
 
 @Composable
 fun NormalLayout(
-    mainPageContent: @Composable (navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit,
-    otherPageBuilder: (NavGraphBuilder.(navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit)? = null,
-    extraPadding: PaddingValues = PaddingValues(0.dp)
+  mainPageContent: @Composable (navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit,
+  otherPageBuilder: (NavGraphBuilder.(navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit)? = null,
+  extraPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    val navController = rememberMiuixNavController()
-    val layoutDirection = LocalLayoutDirection.current
-    val systemBarInsets = WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal).asPaddingValues()
-    val contentPadding = systemBarInsets.let {
-        PaddingValues.Absolute(
-            left = it.calculateLeftPadding(layoutDirection) + extraPadding.calculateLeftPadding(layoutDirection),
-            top = extraPadding.calculateTopPadding(),
-            right = it.calculateRightPadding(layoutDirection)+ extraPadding.calculateRightPadding(layoutDirection),
-            bottom = extraPadding.calculateBottomPadding()
-        )
+  val navController = rememberMiuixNavController()
+  val layoutDirection = LocalLayoutDirection.current
+  val systemBarInsets =
+    WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal)
+      .asPaddingValues()
+  val contentPadding = systemBarInsets.let {
+    PaddingValues.Absolute(
+      left = it.calculateLeftPadding(layoutDirection) + extraPadding.calculateLeftPadding(
+        layoutDirection
+      ),
+      top = extraPadding.calculateTopPadding(),
+      right = it.calculateRightPadding(layoutDirection) + extraPadding.calculateRightPadding(
+        layoutDirection
+      ),
+      bottom = extraPadding.calculateBottomPadding()
+    )
+  }
+  MiuixNavHost(
+    modifier = Modifier.background(Color.Black),
+    navController = navController,
+    startDestination = HyperXAppDefaults.PAGE_MAIN,
+    cornerRadius = HyperXActivity.screenCornerRadius.intValue.dp
+  ) {
+    miuixComposable(HyperXAppDefaults.PAGE_MAIN) {
+      mainPageContent(
+        navController,
+        contentPadding,
+        BasePageDefaults.Mode.FULL
+      )
     }
-    MiuixNavHost(
-        modifier = Modifier.background(Color.Black),
-        navController = navController,
-        startDestination = HyperXAppDefaults.PAGE_MAIN,
-        cornerRadius = HyperXActivity.screenCornerRadius.intValue.dp
-    ) {
-        miuixComposable(HyperXAppDefaults.PAGE_MAIN) { mainPageContent(navController, contentPadding, BasePageDefaults.Mode.FULL) }
-        otherPageBuilder?.let { it(navController, contentPadding, BasePageDefaults.Mode.FULL) }
-    }
+    otherPageBuilder?.let { it(navController, contentPadding, BasePageDefaults.Mode.FULL) }
+  }
 }
 
 @Composable
 fun SplitLayout(
-    mainPageContent: @Composable (navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit,
-    emptyPageContent: @Composable () -> Unit,
-    otherPageBuilder: (NavGraphBuilder.(navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit)? = null,
-    leftWeight: Float = 1.0f,
-    rightWeight: Float = 1.0f
+  mainPageContent: @Composable (navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit,
+  emptyPageContent: @Composable () -> Unit,
+  otherPageBuilder: (NavGraphBuilder.(navController: NavHostController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) -> Unit)? = null,
+  leftWeight: Float = 1.0f,
+  rightWeight: Float = 1.0f
 ) {
-    val easing = MiuixNavHostDefaults.NavAnimationEasing
-    val duration = 500
-    val navController = rememberMiuixNavController()
-    val layoutDirection = LocalLayoutDirection.current
-    val systemBarInsets = WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal).asPaddingValues()
-    val contentPaddingLeft = systemBarInsets.let {
-        PaddingValues.Absolute(
-            left = it.calculateLeftPadding(layoutDirection) + 12.dp,
-            top = it.calculateTopPadding(),
-            right = 12.dp,
-            bottom = it.calculateBottomPadding()
-        )
-    }
-    val contentPaddingRight = systemBarInsets.let {
-        PaddingValues.Absolute(
-            left = 12.dp,
-            top = it.calculateTopPadding(),
-            right = it.calculateRightPadding(layoutDirection) + 12.dp,
-            bottom = it.calculateBottomPadding()
-        )
-    }
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorScheme.surface)
+  val easing = MiuixNavHostDefaults.NavAnimationEasing
+  val duration = 500
+  val navController = rememberMiuixNavController()
+  val layoutDirection = LocalLayoutDirection.current
+  val systemBarInsets =
+    WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal)
+      .asPaddingValues()
+  val contentPaddingLeft = systemBarInsets.let {
+    PaddingValues.Absolute(
+      left = it.calculateLeftPadding(layoutDirection) + 12.dp,
+      top = it.calculateTopPadding(),
+      right = 12.dp,
+      bottom = it.calculateBottomPadding()
+    )
+  }
+  val contentPaddingRight = systemBarInsets.let {
+    PaddingValues.Absolute(
+      left = 12.dp,
+      top = it.calculateTopPadding(),
+      right = it.calculateRightPadding(layoutDirection) + 12.dp,
+      bottom = it.calculateBottomPadding()
+    )
+  }
+  Row(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(colorScheme.surface)
+  ) {
+    Box(
+      modifier = Modifier.weight(leftWeight)
     ) {
-        Box(
-            modifier = Modifier.weight(leftWeight)
-        ) {
-            mainPageContent(navController, contentPaddingLeft, BasePageDefaults.Mode.SPLIT_LEFT)
-        }
-        VerticalDivider(thickness = 0.75.dp, color = colorScheme.dividerLine)
-        MiuixNavHost(
-            navController = navController,
-            startDestination = HyperXAppDefaults.PAGE_EMPTY,
-            modifier = Modifier.weight(rightWeight),
-            enterTransition = {
-                slideInHorizontally(
-                    initialOffsetX = { it },
-                    animationSpec = tween(duration, 0, easing)
-                )
-            },
-            exitTransition = {
-                slideOutHorizontally(
-                    targetOffsetX = { it },
-                    animationSpec = tween(duration, 0, easing)
-                )
-            },
-            popEnterTransition = {
-                slideInHorizontally(
-                    initialOffsetX = { it },
-                    animationSpec = tween(duration, 0, easing)
-                )
-            },
-            popExitTransition = {
-                slideOutHorizontally(
-                    targetOffsetX = { it },
-                    animationSpec = tween(duration, 0, easing)
-                )
-            }
-        ) {
-            miuixComposable(
-                HyperXAppDefaults.PAGE_EMPTY,
-                exitTransition = { fadeOut() },
-                popEnterTransition = { fadeIn() }
-            ) { emptyPageContent() }
-            otherPageBuilder?.let { it(navController, contentPaddingRight, BasePageDefaults.Mode.SPLIT_RIGHT) }
-        }
+      mainPageContent(navController, contentPaddingLeft, BasePageDefaults.Mode.SPLIT_LEFT)
     }
+    VerticalDivider(thickness = 0.75.dp, color = colorScheme.dividerLine)
+    MiuixNavHost(
+      navController = navController,
+      startDestination = HyperXAppDefaults.PAGE_EMPTY,
+      modifier = Modifier.weight(rightWeight),
+      enterTransition = {
+        slideInHorizontally(
+          initialOffsetX = { it },
+          animationSpec = tween(duration, 0, easing)
+        )
+      },
+      exitTransition = {
+        slideOutHorizontally(
+          targetOffsetX = { it },
+          animationSpec = tween(duration, 0, easing)
+        )
+      },
+      popEnterTransition = {
+        slideInHorizontally(
+          initialOffsetX = { it },
+          animationSpec = tween(duration, 0, easing)
+        )
+      },
+      popExitTransition = {
+        slideOutHorizontally(
+          targetOffsetX = { it },
+          animationSpec = tween(duration, 0, easing)
+        )
+      }
+    ) {
+      miuixComposable(
+        HyperXAppDefaults.PAGE_EMPTY,
+        exitTransition = { fadeOut() },
+        popEnterTransition = { fadeIn() }
+      ) { emptyPageContent() }
+      otherPageBuilder?.let {
+        it(
+          navController,
+          contentPaddingRight,
+          BasePageDefaults.Mode.SPLIT_RIGHT
+        )
+      }
+    }
+  }
 }
 
 @Composable
 fun DefaultEmptyPage(
-    imageIcon: ImageIcon = ImageIcon(
-        iconRes = R.drawable.ic_miuix,
-        iconSize = 255.dp
-    )
+  imageIcon: ImageIcon = ImageIcon(
+    iconRes = R.drawable.ic_miuix,
+    iconSize = 255.dp
+  )
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        DrawableResIcon(imageIcon)
-    }
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center
+  ) {
+    DrawableResIcon(imageIcon)
+  }
 }
 
 object HyperXAppDefaults {
-    const val PAGE_MAIN = "MainPage"
-    const val PAGE_EMPTY = "EmptyPage"
+  const val PAGE_MAIN = "MainPage"
+  const val PAGE_EMPTY = "EmptyPage"
 }
 
 enum class AppRootLayout {
-    Normal,
-    LargeScreen,
-    Split11,
-    Split12
+  Normal,
+  LargeScreen,
+  Split11,
+  Split12
 }
 
 @Composable
 fun VerticalDivider(
-    modifier: Modifier = Modifier,
-    thickness: Dp,
-    color: Color,
+  modifier: Modifier = Modifier,
+  thickness: Dp,
+  color: Color,
 ) =
-    Canvas(modifier.fillMaxHeight().width(thickness)) {
-        drawLine(
-            color = color,
-            strokeWidth = thickness.toPx(),
-            start = Offset(thickness.toPx() / 2, 0f),
-            end = Offset(thickness.toPx() / 2, size.height),
-        )
-    }
+  Canvas(modifier
+    .fillMaxHeight()
+    .width(thickness)) {
+    drawLine(
+      color = color,
+      strokeWidth = thickness.toPx(),
+      start = Offset(thickness.toPx() / 2, 0f),
+      end = Offset(thickness.toPx() / 2, size.height),
+    )
+  }

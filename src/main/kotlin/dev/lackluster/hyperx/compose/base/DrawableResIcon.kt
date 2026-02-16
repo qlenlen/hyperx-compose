@@ -15,97 +15,97 @@ import androidx.compose.ui.unit.dp
 import com.mocharealm.gaze.capsule.ContinuousRoundedRectangle
 
 data class ImageIcon(
-    val iconVector: ImageVector? = null,
-    val iconRes: Int? = null,
-    val iconBitmap: ImageBitmap? = null,
-    val iconSize: IconSize = IconSize.Small,
-    val iconSizeDp: Dp = Dp.Unspecified,
-    val cornerRadius: Dp = Dp.Unspecified,
+  val iconVector: ImageVector? = null,
+  val iconRes: Int? = null,
+  val iconBitmap: ImageBitmap? = null,
+  val iconSize: IconSize = IconSize.Small,
+  val iconSizeDp: Dp = Dp.Unspecified,
+  val cornerRadius: Dp = Dp.Unspecified,
 ) {
-    constructor(
-        iconVector: ImageVector? = null,
-        iconRes: Int? = null,
-        iconBitmap: ImageBitmap? = null,
-        iconSize: IconSize,
-        cornerRadius: Dp = Dp.Unspecified,
-    ) : this(iconVector, iconRes, iconBitmap, iconSize, Dp.Unspecified, cornerRadius)
+  constructor(
+    iconVector: ImageVector? = null,
+    iconRes: Int? = null,
+    iconBitmap: ImageBitmap? = null,
+    iconSize: IconSize,
+    cornerRadius: Dp = Dp.Unspecified,
+  ) : this(iconVector, iconRes, iconBitmap, iconSize, Dp.Unspecified, cornerRadius)
 
-    constructor(
-        iconVector: ImageVector? = null,
-        iconRes: Int? = null,
-        iconBitmap: ImageBitmap? = null,
-        iconSize: Dp,
-        cornerRadius: Dp = Dp.Unspecified,
-    ) : this(iconVector, iconRes, iconBitmap, IconSize.Unspecified, iconSize, cornerRadius)
+  constructor(
+    iconVector: ImageVector? = null,
+    iconRes: Int? = null,
+    iconBitmap: ImageBitmap? = null,
+    iconSize: Dp,
+    cornerRadius: Dp = Dp.Unspecified,
+  ) : this(iconVector, iconRes, iconBitmap, IconSize.Unspecified, iconSize, cornerRadius)
 
-    fun getSize(): Dp {
-        return when (iconSize) {
-            IconSize.Small -> 28.dp
-            IconSize.Medium -> 38.dp
-            IconSize.Large -> 44.dp
-            IconSize.App -> 40.dp
-            IconSize.SeekBar -> 26.dp
-            IconSize.Unspecified -> iconSizeDp
-        }
+  fun getSize(): Dp {
+    return when (iconSize) {
+      IconSize.Small -> 28.dp
+      IconSize.Medium -> 38.dp
+      IconSize.Large -> 44.dp
+      IconSize.App -> 40.dp
+      IconSize.SeekBar -> 26.dp
+      IconSize.Unspecified -> iconSizeDp
     }
+  }
 
-    fun getHorizontalPadding(): Dp {
-        return when (iconSize) {
-            IconSize.Small -> 16.dp
-            IconSize.Medium -> 11.dp
-            IconSize.Large -> 8.dp
-            IconSize.App -> 16.dp
-            IconSize.SeekBar -> 12.dp
-            IconSize.Unspecified -> 0.dp
-        }
+  fun getHorizontalPadding(): Dp {
+    return when (iconSize) {
+      IconSize.Small -> 16.dp
+      IconSize.Medium -> 11.dp
+      IconSize.Large -> 8.dp
+      IconSize.App -> 16.dp
+      IconSize.SeekBar -> 12.dp
+      IconSize.Unspecified -> 0.dp
     }
+  }
 }
 
 enum class IconSize {
-    Small,
-    Medium,
-    Large,
-    App,
-    SeekBar,
-    Unspecified
+  Small,
+  Medium,
+  Large,
+  App,
+  SeekBar,
+  Unspecified
 }
 
 @Composable
 fun DrawableResIcon(
-    imageIcon: ImageIcon
+  imageIcon: ImageIcon
 ) {
-    val iconSizeDp = imageIcon.getSize()
-    val iconCornerRadius = imageIcon.cornerRadius
-    val iconPaddingDp = imageIcon.getHorizontalPadding()
-    val modifier = Modifier
-        .padding(end = iconPaddingDp)
-        .size(iconSizeDp)
-        .then(
-            if (iconCornerRadius != Dp.Unspecified)
-                Modifier.clip(
-                    if (iconCornerRadius >= iconSizeDp / 2) CircleShape
-                    else ContinuousRoundedRectangle(iconCornerRadius)
-                )
-            else
-                Modifier
+  val iconSizeDp = imageIcon.getSize()
+  val iconCornerRadius = imageIcon.cornerRadius
+  val iconPaddingDp = imageIcon.getHorizontalPadding()
+  val modifier = Modifier
+    .padding(end = iconPaddingDp)
+    .size(iconSizeDp)
+    .then(
+      if (iconCornerRadius != Dp.Unspecified)
+        Modifier.clip(
+          if (iconCornerRadius >= iconSizeDp / 2) CircleShape
+          else ContinuousRoundedRectangle(iconCornerRadius)
         )
-    imageIcon.iconRes?.let {
-        Image(
-            modifier = modifier,
-            painter = painterResource(it),
-            contentDescription = null
-        )
-    } ?: imageIcon.iconBitmap?.let {
-        Image(
-            modifier = modifier,
-            bitmap = it,
-            contentDescription = null
-        )
-    } ?: imageIcon.iconVector?.let {
-        Image(
-            modifier = modifier,
-            imageVector = it,
-            contentDescription = null
-        )
-    }
+      else
+        Modifier
+    )
+  imageIcon.iconRes?.let {
+    Image(
+      modifier = modifier,
+      painter = painterResource(it),
+      contentDescription = null
+    )
+  } ?: imageIcon.iconBitmap?.let {
+    Image(
+      modifier = modifier,
+      bitmap = it,
+      contentDescription = null
+    )
+  } ?: imageIcon.iconVector?.let {
+    Image(
+      modifier = modifier,
+      imageVector = it,
+      contentDescription = null
+    )
+  }
 }

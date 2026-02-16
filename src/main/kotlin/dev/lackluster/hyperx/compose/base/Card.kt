@@ -41,22 +41,22 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
  */
 @Composable
 fun Card(
-    modifier: Modifier = Modifier,
-    shape: Shape = CardDefaults.shape,
-    colors: CardColors = CardDefaults.cardColors(),
-    border: BorderStroke? = null,
-    contentPadding: PaddingValues = CardDefaults.contentPaddingZero,
-    content: @Composable ColumnScope.() -> Unit,
+  modifier: Modifier = Modifier,
+  shape: Shape = CardDefaults.shape,
+  colors: CardColors = CardDefaults.cardColors(),
+  border: BorderStroke? = null,
+  contentPadding: PaddingValues = CardDefaults.contentPaddingZero,
+  content: @Composable ColumnScope.() -> Unit,
 ) {
-    Surface(
-        modifier = modifier,
-        shape = shape,
-        color = colors.containerColor(enabled = true),
-        contentColor = colors.contentColor(enabled = true),
-        border = border,
-    ) {
-        Column(modifier = Modifier.padding(contentPadding), content = content)
-    }
+  Surface(
+    modifier = modifier,
+    shape = shape,
+    color = colors.containerColor(enabled = true),
+    contentColor = colors.contentColor(enabled = true),
+    border = border,
+  ) {
+    Column(modifier = Modifier.padding(contentPadding), content = content)
+  }
 }
 
 /**
@@ -83,97 +83,98 @@ fun Card(
  */
 @Composable
 fun Card(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    shape: Shape = CardDefaults.shape,
-    colors: CardColors = CardDefaults.cardColors(),
-    border: BorderStroke? = null,
-    interactionSource: MutableInteractionSource? = null,
-    contentPadding: PaddingValues = CardDefaults.contentPaddingZero,
-    content: @Composable ColumnScope.() -> Unit,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  shape: Shape = CardDefaults.shape,
+  colors: CardColors = CardDefaults.cardColors(),
+  border: BorderStroke? = null,
+  interactionSource: MutableInteractionSource? = null,
+  contentPadding: PaddingValues = CardDefaults.contentPaddingZero,
+  content: @Composable ColumnScope.() -> Unit,
 ) {
-    @Suppress("NAME_SHADOWING")
-    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled,
-        shape = shape,
-        color = colors.containerColor(enabled),
-        contentColor = colors.contentColor(enabled),
-        border = border,
-        interactionSource = interactionSource,
-    ) {
-        Column(modifier = Modifier.padding(contentPadding), content = content)
-    }
+  @Suppress("NAME_SHADOWING")
+  val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+  Surface(
+    onClick = onClick,
+    modifier = modifier,
+    enabled = enabled,
+    shape = shape,
+    color = colors.containerColor(enabled),
+    contentColor = colors.contentColor(enabled),
+    border = border,
+    interactionSource = interactionSource,
+  ) {
+    Column(modifier = Modifier.padding(contentPadding), content = content)
+  }
 }
 
 /** Contains the default values used by all card types. */
 object CardDefaults {
-    // shape Defaults
-    /** Default shape for a card. */
-    val shape: Shape
-        @Composable get() = ContinuousRoundedRectangle(16.dp)
+  // shape Defaults
+  /** Default shape for a card. */
+  val shape: Shape
+    @Composable get() = ContinuousRoundedRectangle(16.dp)
 
-    val contentPaddingZero: PaddingValues = PaddingValues.Zero
+  val contentPaddingZero: PaddingValues = PaddingValues.Zero
 
-    val contentPadding: PaddingValues = PaddingValues(16.dp)
+  val contentPadding: PaddingValues = PaddingValues(16.dp)
 
-    /**
-     * Creates a [CardColors] that represents the default container and content colors used in a
-     * [Card].
-     */
-    @Composable fun cardColors(): CardColors {
-        val isDark = isSystemInDarkTheme()
-        return if (isDark) {
-            defaultCardColorsDarkCached
-        } else {
-            defaultCardColorsLightCached
-        } ?: CardColors(
-            containerColor = colorScheme.background,
-            contentColor = contentColorFor(colorScheme.background),
-            disabledContainerColor = colorScheme.background
-                .copy(alpha = DisabledAlpha)
-                .compositeOver(colorScheme.background),
-            disabledContentColor =
-                contentColorFor(colorScheme.background)
-                    .copy(DisabledAlpha),
-        ).also {
-            if (isDark) {
-                defaultCardColorsDarkCached = it
-            } else {
-                defaultCardColorsLightCached = it
-            }
-        }
+  /**
+   * Creates a [CardColors] that represents the default container and content colors used in a
+   * [Card].
+   */
+  @Composable
+  fun cardColors(): CardColors {
+    val isDark = isSystemInDarkTheme()
+    return if (isDark) {
+      defaultCardColorsDarkCached
+    } else {
+      defaultCardColorsLightCached
+    } ?: CardColors(
+      containerColor = colorScheme.background,
+      contentColor = contentColorFor(colorScheme.background),
+      disabledContainerColor = colorScheme.background
+        .copy(alpha = DisabledAlpha)
+        .compositeOver(colorScheme.background),
+      disabledContentColor =
+        contentColorFor(colorScheme.background)
+          .copy(DisabledAlpha),
+    ).also {
+      if (isDark) {
+        defaultCardColorsDarkCached = it
+      } else {
+        defaultCardColorsLightCached = it
+      }
     }
+  }
 
 
-    /**
-     * Creates a [CardColors] that represents the default container and content colors used in a
-     * [Card].
-     *
-     * @param containerColor the container color of this [Card] when enabled.
-     * @param contentColor the content color of this [Card] when enabled.
-     * @param disabledContainerColor the container color of this [Card] when not enabled.
-     * @param disabledContentColor the content color of this [Card] when not enabled.
-     */
-    @Composable
-    fun cardColors(
-        containerColor: Color = Color.Unspecified,
-        contentColor: Color = contentColorFor(containerColor),
-        disabledContainerColor: Color = Color.Unspecified,
-        disabledContentColor: Color = contentColor.copy(DisabledAlpha),
-    ): CardColors =
-        cardColors().copy(
-            containerColor = containerColor,
-            contentColor = contentColor,
-            disabledContainerColor = disabledContainerColor,
-            disabledContentColor = disabledContentColor,
-        )
+  /**
+   * Creates a [CardColors] that represents the default container and content colors used in a
+   * [Card].
+   *
+   * @param containerColor the container color of this [Card] when enabled.
+   * @param contentColor the content color of this [Card] when enabled.
+   * @param disabledContainerColor the container color of this [Card] when not enabled.
+   * @param disabledContentColor the content color of this [Card] when not enabled.
+   */
+  @Composable
+  fun cardColors(
+    containerColor: Color = Color.Unspecified,
+    contentColor: Color = contentColorFor(containerColor),
+    disabledContainerColor: Color = Color.Unspecified,
+    disabledContentColor: Color = contentColor.copy(DisabledAlpha),
+  ): CardColors =
+    cardColors().copy(
+      containerColor = containerColor,
+      contentColor = contentColor,
+      disabledContainerColor = disabledContainerColor,
+      disabledContentColor = disabledContentColor,
+    )
 
-    internal var defaultCardColorsLightCached: CardColors? = null
-    internal var defaultCardColorsDarkCached: CardColors? = null
+  internal var defaultCardColorsLightCached: CardColors? = null
+  internal var defaultCardColorsDarkCached: CardColors? = null
 }
 
 /**
@@ -189,63 +190,63 @@ object CardDefaults {
 @Immutable
 class CardColors
 constructor(
-    val containerColor: Color,
-    val contentColor: Color,
-    val disabledContainerColor: Color,
-    val disabledContentColor: Color,
+  val containerColor: Color,
+  val contentColor: Color,
+  val disabledContainerColor: Color,
+  val disabledContentColor: Color,
 ) {
-    /**
-     * Returns a copy of this CardColors, optionally overriding some of the values. This uses the
-     * Color.Unspecified to mean “use the value from the source”
-     */
-    fun copy(
-        containerColor: Color = this.containerColor,
-        contentColor: Color = this.contentColor,
-        disabledContainerColor: Color = this.disabledContainerColor,
-        disabledContentColor: Color = this.disabledContentColor,
-    ) =
-        CardColors(
-            containerColor.takeOrElse { this.containerColor },
-            contentColor.takeOrElse { this.contentColor },
-            disabledContainerColor.takeOrElse { this.disabledContainerColor },
-            disabledContentColor.takeOrElse { this.disabledContentColor },
-        )
+  /**
+   * Returns a copy of this CardColors, optionally overriding some of the values. This uses the
+   * Color.Unspecified to mean “use the value from the source”
+   */
+  fun copy(
+    containerColor: Color = this.containerColor,
+    contentColor: Color = this.contentColor,
+    disabledContainerColor: Color = this.disabledContainerColor,
+    disabledContentColor: Color = this.disabledContentColor,
+  ) =
+    CardColors(
+      containerColor.takeOrElse { this.containerColor },
+      contentColor.takeOrElse { this.contentColor },
+      disabledContainerColor.takeOrElse { this.disabledContainerColor },
+      disabledContentColor.takeOrElse { this.disabledContentColor },
+    )
 
-    /**
-     * Represents the container color for this card, depending on [enabled].
-     *
-     * @param enabled whether the card is enabled
-     */
-    @Stable
-    internal fun containerColor(enabled: Boolean): Color =
-        if (enabled) containerColor else disabledContainerColor
+  /**
+   * Represents the container color for this card, depending on [enabled].
+   *
+   * @param enabled whether the card is enabled
+   */
+  @Stable
+  internal fun containerColor(enabled: Boolean): Color =
+    if (enabled) containerColor else disabledContainerColor
 
-    /**
-     * Represents the content color for this card, depending on [enabled].
-     *
-     * @param enabled whether the card is enabled
-     */
-    @Stable
-    internal fun contentColor(enabled: Boolean) =
-        if (enabled) contentColor else disabledContentColor
+  /**
+   * Represents the content color for this card, depending on [enabled].
+   *
+   * @param enabled whether the card is enabled
+   */
+  @Stable
+  internal fun contentColor(enabled: Boolean) =
+    if (enabled) contentColor else disabledContentColor
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || other !is CardColors) return false
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || other !is CardColors) return false
 
-        if (containerColor != other.containerColor) return false
-        if (contentColor != other.contentColor) return false
-        if (disabledContainerColor != other.disabledContainerColor) return false
-        if (disabledContentColor != other.disabledContentColor) return false
+    if (containerColor != other.containerColor) return false
+    if (contentColor != other.contentColor) return false
+    if (disabledContainerColor != other.disabledContainerColor) return false
+    if (disabledContentColor != other.disabledContentColor) return false
 
-        return true
-    }
+    return true
+  }
 
-    override fun hashCode(): Int {
-        var result = containerColor.hashCode()
-        result = 31 * result + contentColor.hashCode()
-        result = 31 * result + disabledContainerColor.hashCode()
-        result = 31 * result + disabledContentColor.hashCode()
-        return result
-    }
+  override fun hashCode(): Int {
+    var result = containerColor.hashCode()
+    result = 31 * result + contentColor.hashCode()
+    result = 31 * result + disabledContainerColor.hashCode()
+    result = 31 * result + disabledContentColor.hashCode()
+    return result
+  }
 }
