@@ -77,7 +77,7 @@ fun SeekBarPreference(
       titleColor = titleColor,
       startAction = {
         icon?.let {
-          DrawableResIcon(it)
+          DrawableResIcon(it, tint = MiuixTheme.colorScheme.onSurfaceVariantActions)
         }
       },
       endActions = {
@@ -166,7 +166,7 @@ fun SeekBarPreference(
       titleColor = titleColor,
       startAction = {
         icon?.let {
-          DrawableResIcon(it)
+          DrawableResIcon(it, tint = MiuixTheme.colorScheme.onSurfaceVariantActions)
         }
       },
       endActions = {

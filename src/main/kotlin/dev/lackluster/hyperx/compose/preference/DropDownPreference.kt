@@ -207,7 +207,7 @@ fun DropDownPreference(
         dropDownContent(PopupPositionProvider.Align.Start)
       }
       icon?.let {
-        DrawableResIcon(it)
+        DrawableResIcon(it, tint = MiuixTheme.colorScheme.onSurfaceVariantActions)
       }
     },
     endActions = {
@@ -224,9 +224,9 @@ fun DropDownPreference(
       }
       Image(
         modifier = Modifier
-            .padding(start = 8.dp)
-            .size(10.dp, 16.dp)
-            .align(Alignment.CenterVertically),
+          .padding(start = 8.dp)
+          .size(10.dp, 16.dp)
+          .align(Alignment.CenterVertically),
         imageVector = MiuixIcons.Basic.ArrowUpDown,
         colorFilter = ColorFilter.tint(rightActionColor.color(enabled)),
         contentDescription = null
@@ -280,8 +280,8 @@ fun DropDownPreference(
           }
           TextButton(
             modifier = Modifier
-                .padding(start = 24.dp, top = 12.dp, end = 24.dp)
-                .fillMaxWidth(),
+              .padding(start = 24.dp, top = 12.dp, end = 24.dp)
+              .fillMaxWidth(),
             text = stringResource(R.string.button_cancel),
             minHeight = 50.dp,
             onClick = {
@@ -316,7 +316,7 @@ data class DropDownEntry(
   val iconRes: Int? = null,
   val iconBitmap: ImageBitmap? = null,
   val iconVector: ImageVector? = null,
-  val iconTint: Color? = null
+  var iconTint: Color? = null
 )
 
 enum class DropDownMode {

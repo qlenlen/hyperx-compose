@@ -18,6 +18,46 @@ import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.SwitchColors
 import top.yukonga.miuix.kmp.basic.SwitchDefaults
+import top.yukonga.miuix.kmp.extra.SuperSwitch
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+
+@Composable
+fun StockSwitchPreference(
+  title: String,
+  summary: String? = null,
+  key: String? = null,
+  defValue: Boolean = false,
+  enabled: Boolean = true,
+  startAction: @Composable () -> Unit = {},
+  titleColor: BasicComponentColors = BasicComponentDefaults.titleColor(),
+  summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
+  switchColors: SwitchColors = SwitchDefaults.switchColors(),
+  onCheckedChange: ((Boolean) -> Unit)? = null,
+) {
+  var checked by remember {
+    mutableStateOf(
+      key?.let { SafeSP.getBoolean(it, defValue) } ?: defValue
+    )
+  }
+
+  val updatedOnCheckedChange by rememberUpdatedState(onCheckedChange)
+
+  SuperSwitch(
+    checked = checked,
+    onCheckedChange = { newValue ->
+      checked = newValue
+      key?.let { SafeSP.putAny(it, newValue) }
+      updatedOnCheckedChange?.invoke(newValue)
+    },
+    title = title,
+    summary = summary,
+    enabled = enabled,
+    titleColor = titleColor,
+    summaryColor = summaryColor,
+    switchColors = switchColors,
+    startAction = { startAction() }
+  )
+}
 
 @Composable
 fun SwitchPreference(
@@ -47,7 +87,7 @@ fun SwitchPreference(
     summaryColor = summaryColor,
     startAction = {
       icon?.let {
-        DrawableResIcon(it)
+        DrawableResIcon(it, tint = MiuixTheme.colorScheme.onSurfaceVariantActions)
       }
     },
     endActions = {
@@ -100,7 +140,7 @@ fun SwitchPreference(
     summaryColor = summaryColor,
     startAction = {
       icon?.let {
-        DrawableResIcon(it)
+        DrawableResIcon(it, tint = MiuixTheme.colorScheme.onSurfaceVariantActions)
       }
     },
     endActions = {

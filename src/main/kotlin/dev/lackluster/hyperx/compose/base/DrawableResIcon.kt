@@ -7,12 +7,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mocharealm.gaze.capsule.ContinuousRoundedRectangle
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 data class ImageIcon(
   val iconVector: ImageVector? = null,
@@ -40,7 +42,7 @@ data class ImageIcon(
 
   fun getSize(): Dp {
     return when (iconSize) {
-      IconSize.Small -> 28.dp
+      IconSize.Small -> 24.dp
       IconSize.Medium -> 38.dp
       IconSize.Large -> 44.dp
       IconSize.App -> 40.dp
@@ -51,7 +53,7 @@ data class ImageIcon(
 
   fun getHorizontalPadding(): Dp {
     return when (iconSize) {
-      IconSize.Small -> 16.dp
+      IconSize.Small -> 12.dp
       IconSize.Medium -> 11.dp
       IconSize.Large -> 8.dp
       IconSize.App -> 16.dp
@@ -72,7 +74,8 @@ enum class IconSize {
 
 @Composable
 fun DrawableResIcon(
-  imageIcon: ImageIcon
+  imageIcon: ImageIcon,
+  tint: androidx.compose.ui.graphics.Color? = null
 ) {
   val iconSizeDp = imageIcon.getSize()
   val iconCornerRadius = imageIcon.cornerRadius
@@ -86,26 +89,31 @@ fun DrawableResIcon(
           if (iconCornerRadius >= iconSizeDp / 2) CircleShape
           else ContinuousRoundedRectangle(iconCornerRadius)
         )
-      else
-        Modifier
+      else Modifier
     )
+
+  val colorFilter = tint?.let { ColorFilter.tint(it) }
+
   imageIcon.iconRes?.let {
     Image(
       modifier = modifier,
       painter = painterResource(it),
-      contentDescription = null
+      contentDescription = null,
+      colorFilter = colorFilter
     )
   } ?: imageIcon.iconBitmap?.let {
     Image(
       modifier = modifier,
       bitmap = it,
-      contentDescription = null
+      contentDescription = null,
+      colorFilter = colorFilter
     )
   } ?: imageIcon.iconVector?.let {
     Image(
       modifier = modifier,
       imageVector = it,
-      contentDescription = null
+      contentDescription = null,
+      colorFilter = colorFilter
     )
   }
 }

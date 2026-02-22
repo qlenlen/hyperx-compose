@@ -22,6 +22,7 @@ import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.SwitchColors
 import top.yukonga.miuix.kmp.basic.SwitchDefaults
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun TwoTargetSwitchPreference(
@@ -60,7 +61,7 @@ fun TwoTargetSwitchPreference(
     summary = summary,
     summaryColor = summaryColor,
     startAction = {
-      icon?.let { DrawableResIcon(it) }
+      icon?.let { DrawableResIcon(it, tint = MiuixTheme.colorScheme.onSurfaceVariantActions) }
     },
     endActions = {
       TwoTargetSwitch(
