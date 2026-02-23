@@ -40,11 +40,11 @@ android {
 
 @Suppress("UseTomlInstead")
 dependencies {
-  api("top.yukonga.miuix.kmp:miuix:0.8.3")
-  api("top.yukonga.miuix.kmp:miuix-icons-android:0.8.3")
+  api("top.yukonga.miuix.kmp:miuix:0.8.4")
+  api("top.yukonga.miuix.kmp:miuix-icons-android:0.8.4")
   api("dev.chrisbanes.haze:haze:1.7.2")
-  api("androidx.compose.foundation:foundation:1.10.2")
-  api("androidx.activity:activity-compose:1.12.3")
+  api("androidx.compose.foundation:foundation:1.10.3")
+  api("androidx.activity:activity-compose:1.12.4")
   api("androidx.navigation:navigation-compose:2.9.7")
   api("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
   implementation("com.mocharealm.gaze:capsule:2.1.1-patch2")

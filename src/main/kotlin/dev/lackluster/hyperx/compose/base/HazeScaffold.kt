@@ -29,6 +29,7 @@ fun HazeScaffold(
   topBar: @Composable ((contentPadding: PaddingValues) -> Unit)? = null,
   bottomBar: @Composable ((contentPadding: PaddingValues) -> Unit)? = null,
   floatingActionButton: @Composable () -> Unit = {},
+  floatingToolbar: @Composable () -> Unit = {},
   floatingActionButtonPosition: FabPosition = FabPosition.End,
   snackbarHost: @Composable () -> Unit = {},
   containerColor: Color = colorScheme.surface,
@@ -61,6 +62,7 @@ fun HazeScaffold(
         }
       }
     },
+    floatingToolbar = floatingToolbar,
     bottomBar = @Composable {
       bottomBar?.let {
         if (blurBottomBar) {
